@@ -7,9 +7,9 @@ EXE2 = reinas_t
 OBJS1 = main_p.o almacenamiento.o
 OBJS2 = main_t.o almacenamiento.o
 
-CFLAGS = --lpthread
+CFLAGS = -lpthread
 
-all: ${EXE1} ${EXE2} clean
+all: ${EXE1} ${EXE2}
 
 ${EXE1}: ${OBJS1}
 	gcc ${CFLAGS} ${OBJS1} -o ${EXE1}
