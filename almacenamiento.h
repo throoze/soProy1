@@ -192,7 +192,7 @@ int *posToArray(HashLote *lote);
 
 /*----------------------------------------------------------------------------*/
 
-/*INICIO definición del tipo Lista.*/
+/*INICIO definición del tipo ListaInt.*/
 
 /**
  * Clasica lista de elementos. Es una lista de apuntadores a void, con lo cual
@@ -209,9 +209,9 @@ typedef struct {
   CajitaInt *head,*tail;
   int size;
 } ListaInt;
-/*FIN del tipo Lista.*/
+/*FIN del tipo ListaInt.*/
 
-/*INICIO Funciones y Procedimientos referentes al tipo Lista*/
+/*INICIO Funciones y Procedimientos referentes al tipo ListaInt*/
 /**
  * Crea una nueva Cajita, reservando la memoria necesaria para ello.
  * 
@@ -280,7 +280,58 @@ void li_print(ListaInt lista);
  */
 int li_liberar(ListaInt *lista);
 
-/*FIN Funciones y Procedimientos referentes al tipo Lista*/
+/*FIN Funciones y Procedimientos referentes al tipo ListaInt*/
 
 /*----------------------------------------------------------------------------*/
+
+/*INICIO declaración del tipo Trie*/
+typedef struct nodeTrie NodeTrie;
+
+struct nodeTrie {
+  int isWord;
+  int multiplicity;
+  NodeTrie *parent;
+  NodeTrie **children;
+  int numChildren;
+};
+
+typedef struct {
+  NodeTrie *root;
+  int size;
+  int maxChildren;
+} Trie;
+/*FIN declaración del tipo Trie*/
+
+/*INICIO Funciones y procedimientos referentes al tipo Trie*/
+/**
+ * Crea un nuevo NodeTrie, reservando la memoria necesaria para ello.
+ * nChildren: Número máximo de hijos que podrá tener un NodeTrie.
+ * retorna: Un apuntador a un nuevo NodeTrie vacío.
+ */
+NodeTrie *newNodeTrie(int nChildren);
+
+/**
+ * Crea un nuevo Trie, reservando la memoria necesaria para ello.
+ * nChildren: Número máximo de hijos que podrá tener un nodo de este Trie.
+ * retorna: Un apuntador a un nuevo Trie vacío.
+ */
+Trie *newTrie(int nChildren);
+
+/**
+ * Inserta el elemento 'elem' en el Trie 'tree'.
+ * elem: Elemento a insertar.
+ * tree: Apuntador al Trie donde se insertará el elemento 'elem'.
+ * retorna: 0 si la inserción tuvo éxito, 1 en caso contrario.
+ */
+int insert(Trie *tree, void *elem);
+
+/**
+ * Extrae las "palabras" almacenadas en el Trie 'tree'.
+ * tree: Trie del cual se extraerán las palabras.
+ * return: ???
+ */
+/*FIN Funciones y procedimientos referentes al tipo Trie*/
+
+/*----------------------------------------------------------------------------*/
+
 /*FIN DEL ARCHIVO (EOF)*/
