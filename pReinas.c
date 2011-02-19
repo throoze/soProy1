@@ -1,4 +1,4 @@
-#include"pReinas.h"
+#include "pReinas.h"
 
 void try(int i){
   int j;
