@@ -13,28 +13,35 @@ void try(int i){
 	c[i-j+7]=FALSE;
       }
       if (i < 7) try(i+1);
-      else{	
+      else{
+	tiempo = clock() - tiempo;
 	int k;
-	for(k = 0 ; k < 8  ; k++) {
-	  if(k == 7) {
-	    printf("(%d)\n",x[k]);
+	if (imprime){
+	  printf("   Resultado del hijo %d:\n",ri+(rj*8));
+	  printf("      Solucion: ");
+	  for(k = 0 ; k < 8  ; k++) {
+	    if(k == 7) {
+	      printf("(%d,%d)\n",k,x[k]);
+	    }
+	    else {
+	      printf("(%d,%d) ",k,x[k]);
+	    }
 	  }
-	  else {
-	    printf("(%d) ",x[k]);
-	  }
+	  printf("          Tiempo: %f\n",(double)tiempo);
+	  printf("          Tablero inicial: (%d,%d)\n\n", ri, rj);
 	}
 	
 	FILE *archivo;
 	char *nombre = malloc(sizeof(char*));
-	char *resultado = malloc(15);
-	sprintf(nombre,"salida%d%d",ri,rj);
-	sprintf(resultado,"%d %d %d %d %d %d %d %d",x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]);
+	char *resultado = malloc(20);
+	sprintf(nombre,"./salidas/salida%d%d",rj,ri);
 	archivo = fopen(nombre, "w");
+	sprintf(resultado,"%d %d %d %d %d %d %d %d",x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]);
 	if(archivo == NULL) {
 	  perror("error creando el archivo");
 	  exit(0);
 	}
-	fprintf(archivo, "%s", resultado);
+	fprintf(archivo, "%s %f", resultado, (double)tiempo);
 	fclose(archivo);
 	free(resultado);
 	  
@@ -50,9 +57,8 @@ void try(int i){
 int main( int argc, const char* argv[] ){
   ri = atoi(argv[1]);
   rj = atoi(argv[2]);
+  imprime = atoi(argv[3]);
   
-  printf("reina en la posicion (%d,%d)\n",ri,rj);
-  //fflush(stdout);
   int i;
   for(i = 0; i < 8; i++){ 
     a[i] = TRUE;
@@ -69,6 +75,7 @@ int main( int argc, const char* argv[] ){
   b[ri + rj] = FALSE;
   c[ri - rj + 7] = FALSE;
 
+  tiempo = clock();
   try(0);
    
   return 1;

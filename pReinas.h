@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "string.h"
+#include <time.h>
 #define FALSE 0
 #define TRUE 1
 
@@ -20,5 +21,7 @@ int x[8]; // indica la posición de la reina en la columna i-ésima
 
 int ri;
 int rj;
+int imprime;
+clock_t tiempo;
 
 void try(int i);
