@@ -5,33 +5,35 @@
 EXE1 = reinas_p
 EXE2 = reinas_t
 EXE3 = reinas
-OBJS1 = main_p.o reinascommon.o almacenamiento.o
-OBJS2 = main_t.o reinascommon.o almacenamiento.o
+OBJS1 = main_p.o ${LIBS}
+OBJS2 = main_t.o ${LIBS}
+LIBS = reinascommon.o almacenamiento.o
 
-CFLAGS = -lpthread
+TFLAGS = -lpthread
+CFLAGS = -w
 
 all: ${EXE1} ${EXE2} ${EXE3}
 
 ${EXE1}: ${OBJS1}
-	gcc ${OBJS1} -o ${EXE1}
+	gcc ${CFLAGS} ${OBJS1} -o ${EXE1}
 
 ${EXE2}: ${OBJS2}
-	gcc ${CFLAGS} ${OBJS2} -o ${EXE2}
+	gcc ${CFLAGS} ${TFLAGS} ${OBJS2} -o ${EXE2}
 
 ${EXE3}: pReinas.c pReinas.h
-	gcc pReinas.c -o ${EXE3}
+	gcc ${CFLAGS} pReinas.c -o ${EXE3}
 
 main_p.o: main_p.c main_p.h
-	gcc -c main_p.c
+	gcc ${CFLAGS} -c main_p.c
 
-main_t.o: main_t.c main_t.h
-	gcc -c main_t.c
+main_t.o: main_t.c main_t.h 
+	gcc ${CFLAGS} -c main_t.c
 
 reinascommon.o: reinascommon.c reinascommon.h
-	gcc -c reinascommon.c
+	gcc ${CFLAGS} -c reinascommon.c
 
 almacenamiento.o: almacenamiento.c almacenamiento.h
-	gcc -c almacenamiento.c
+	gcc ${CFLAGS} -c almacenamiento.c
 
 
 clean:
