@@ -1,3 +1,9 @@
+/*
+ * Archivo: almacenamiento.c
+ * Desarrollado por: Victor De Ponte
+ *                   Isaac Lopez
+ */
+
 #include "almacenamiento.h"
 #ifndef STD
 #define STD
@@ -230,7 +236,7 @@ int *posToArray(HashLote *lote){
 /*FIN Funciones y Procedimientos referentes al tipo HashLote*/
 
 
-/*INICIO Funciones y Procedimientos referentes al tipo Lista*/
+/*INICIO Funciones y Procedimientos referentes al tipo ListaInt*/
 CajitaInt *newCajitaInt() {
   CajitaInt *nueva = (CajitaInt *) malloc(sizeof(CajitaInt));
   if (nueva != NULL) {
@@ -352,4 +358,44 @@ int li_liberar(ListaInt *list){
   return;
 }
 
-/*FIN Funciones y Procedimientos referentes al tipo Lista*/
+/*FIN Funciones y Procedimientos referentes al tipo ListaInt*/
+
+/*INICIO Funciones y Procedimientos referentes al tipo Trie*/
+NodeTrie *newNodeTrie(int nChildren, NodeTrie *dad) {
+  NodeTrie *nuevo = (NodeTrie *) malloc(sizeof(NodeTrie));
+  nuevo->isWord = nuevo->multiplicity = nuevo->numChildren = 0;
+  nuevo->parent = dad;
+  nuevo->children = (NodeTrie **) malloc(nChildren * sizeof(NodeTrie *));
+  register int i;
+  for (i = 0; i < nChildren; i++) {
+    nuevo->children[i] = NULL;
+  }
+  return nuevo;
+}
+
+Trie *newTrie(int nChildren){
+  Trie *nuevo = (Trie *) malloc( sizeof(Trie));
+  nuevo->size = 0;
+  nuevo->maxChildren = nChildren;
+  nuevo->root = newNodeTrie(nChildren,NULL);
+  return nuevo;
+}
+
+int nt_free(NodeTrie node){
+
+}
+
+int t_free(Trie tree){
+
+}
+
+int insert(Trie *tree, void *elem){
+
+}
+
+int **extractWords(Trie tree){
+
+}
+/*FIN Funciones y Procedimientos referentes al tipo Trie*/
+
+/*FIN DEL ARCHIVO (EOF)*/

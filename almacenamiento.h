@@ -290,9 +290,9 @@ typedef struct nodeTrie NodeTrie;
 struct nodeTrie {
   int isWord;
   int multiplicity;
+  int numChildren;
   NodeTrie *parent;
   NodeTrie **children;
-  int numChildren;
 };
 
 typedef struct {
@@ -308,7 +308,7 @@ typedef struct {
  * nChildren: Número máximo de hijos que podrá tener un NodeTrie.
  * retorna: Un apuntador a un nuevo NodeTrie vacío.
  */
-NodeTrie *newNodeTrie(int nChildren);
+NodeTrie *newNodeTrie(int nChildren, NodeTrie *dad);
 
 /**
  * Crea un nuevo Trie, reservando la memoria necesaria para ello.
@@ -316,6 +316,18 @@ NodeTrie *newNodeTrie(int nChildren);
  * retorna: Un apuntador a un nuevo Trie vacío.
  */
 Trie *newTrie(int nChildren);
+
+/**
+ * Se encarga de liberar la memoria ocupada por un NodeTrie.
+ * retorna: 0 si la liberación tuvo éxito, 1 en caso contrario.
+ */
+int nt_free(NodeTrie node);
+
+/**
+ * Se encarga de liberar la memoria ocupada por un Trie.
+ * retorna: 0 si la liberación tuvo éxito, 1 en caso contrario.
+ */
+int t_free(Trie tree);
 
 /**
  * Inserta el elemento 'elem' en el Trie 'tree'.
@@ -328,8 +340,12 @@ int insert(Trie *tree, void *elem);
 /**
  * Extrae las "palabras" almacenadas en el Trie 'tree'.
  * tree: Trie del cual se extraerán las palabras.
- * return: ???
+ * return: un arreglo que contiene cada palabra representada como un arreglo de
+ *         enteros; donde cada entero representa el caracter asociado a esa po-
+ *         sición en el Trie.
  */
+int **extractWords(Trie tree);
+
 /*FIN Funciones y procedimientos referentes al tipo Trie*/
 
 /*----------------------------------------------------------------------------*/
