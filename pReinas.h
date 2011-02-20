@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+#include <sys/time.h>
 #define FALSE 0
 #define TRUE 1
 #endif
@@ -43,6 +45,7 @@ int ri;
 int rj;
 int rjreal;
 int imprime;
-clock_t tiempo;
+int tiempo;
+struct timeval start, end;
 
 void try(int i);

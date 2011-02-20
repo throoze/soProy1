@@ -53,7 +53,9 @@ void try(int i){
       }
       if (i < 7) try(i+1);
       else{
-	tiempo = clock() - tiempo;
+	gettimeofday(&end, NULL);
+	int tiempo = ((end.tv_sec * 1000000 + end.tv_usec)
+		      - (start.tv_sec * 1000000 + start.tv_usec));
 	int k;
 	if (imprime){
 	  char *resultado = malloc(200);
@@ -66,7 +68,7 @@ void try(int i){
 	      sprintf(resultado, "%s(%d,%d) ",resultado,k,x[k]);
 	    }
 	  }
-	  sprintf(resultado, "%s          Tiempo: %f\n",resultado, (double)tiempo);
+	  sprintf(resultado, "%s          Tiempo (milisegundos): %d\n",resultado, tiempo);
 	  sprintf(resultado, "%s          Tablero inicial: (%d,%d)\n\n",resultado,  ri, rj);
 	  printf(resultado);
 	  
@@ -107,7 +109,7 @@ void *reinas(void *argumentos){
   b[ri + rj] = FALSE;
   c[ri - rj + 7] = FALSE;
 
-  tiempo = clock();
+  gettimeofday(&start, NULL);
   try(0);
    
   return;

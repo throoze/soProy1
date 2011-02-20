@@ -14,7 +14,9 @@ void try(int i){
       }
       if (i < 7) try(i+1);
       else{
-	tiempo = clock() - tiempo;
+	gettimeofday(&end, NULL);
+	tiempo = ((end.tv_sec * 1000000 + end.tv_usec)
+		      - (start.tv_sec * 1000000 + start.tv_usec));
 	int k;
 	if (imprime){
 	  char *resultado = malloc(200);
@@ -27,7 +29,7 @@ void try(int i){
 	      sprintf(resultado, "%s(%d,%d) ",resultado,k,x[k]);
 	    }
 	  }
-	  sprintf(resultado, "%s          Tiempo: %f\n",resultado, (double)tiempo);
+	  sprintf(resultado, "%s          Tiempo (milisegundos): %d \n",resultado, tiempo);
 	  sprintf(resultado, "%s          Tablero inicial: (%d,%d)\n\n",resultado,  ri, rj);
 	  printf(resultado);
 	  
@@ -38,7 +40,7 @@ void try(int i){
 	char *resultado = malloc(20);
 	sprintf(nombre,"./salidas/salida%d%d",rj,ri);
 	archivo = fopen(nombre, "w");
-	sprintf(resultado,"%d %d %d %d %d %d %d %d",x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]);
+	sprintf(resultado,"%d %d %d %d %d %d %d %d %d",x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],tiempo);
 	if(archivo == NULL) {
 	  perror("error creando el archivo");
 	  exit(0);
@@ -78,7 +80,7 @@ int main( int argc, const char* argv[] ){
   b[ri + rj] = FALSE;
   c[ri - rj + 7] = FALSE;
 
-  tiempo = clock();
+gettimeofday(&start, NULL);
   try(0);
    
   return 1;
