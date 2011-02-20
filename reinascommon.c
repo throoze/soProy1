@@ -93,7 +93,7 @@ int t_free(Trie *tree){
   return 0;
 }
 
-int T_insert(Trie *tree, int *elem, clock_t t, int auth){
+int T_insert(Trie *tree, int *elem, clock_t t){
   int tam = (sizeof(elem)/sizeof(int));
   if (tree) {
     NodeTrie *inUse = tree->root;

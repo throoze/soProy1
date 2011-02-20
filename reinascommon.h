@@ -99,7 +99,7 @@ int t_free(Trie *tree);
  * auth: autor de la respuesta dada.
  * retorna: 0 si la inserción tuvo éxito, 1 en caso contrario.
  */
-int T_insert(Trie *tree, int *elem, clock_t t, int auth);
+int T_insert(Trie *tree, int *elem, clock_t t);
 
 /**
  * Se encarga de comenzar la recursion que recorrera el Trie y escribirá el 
