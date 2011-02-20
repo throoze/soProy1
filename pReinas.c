@@ -17,7 +17,8 @@ void try(int i){
 	tiempo = clock() - tiempo;
 	int k;
 	if (imprime){
-	  printf("   Resultado del hijo %d:\n",ri+(rj*8));
+	  fflush(stdout);
+	  printf("   Resultado del proceso %d:\n",ri+(rj*8));
 	  printf("      Solucion: ");
 	  for(k = 0 ; k < 8  ; k++) {
 	    if(k == 7) {
@@ -27,8 +28,10 @@ void try(int i){
 	      printf("(%d,%d) ",k,x[k]);
 	    }
 	  }
-	  printf("          Tiempo: %f\n",(double)tiempo);
+	  fflush(stdout);
+	  printf("          Tiempo: %.2Lf mseg.\n",(double)tiempo);
 	  printf("          Tablero inicial: (%d,%d)\n\n", ri, rj);
+	  fflush(stdout);
 	}
 	
 	FILE *archivo;

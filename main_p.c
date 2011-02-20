@@ -5,7 +5,6 @@
  */
 #include "main_p.h"
 
-
 #ifndef STD
 #define STD
 #include <stdio.h>
@@ -35,15 +34,29 @@
 #define USO "\nreinas_p: Resuelve el problema de las 8 reinas usando Procesos hijos.\n\nDesarrollado por:\n\tVictor De Ponte, Carnet 05-38087\n\tIsaac Lopez, Carnet 07-41120\n\nUSO:\n\n\tSintaxis:\n\n\t\treinas_p [-n <num_trabajadores>] [-i {1|0}]\n\n\tOpciones:\n\n\t\t-n\tNumero de hijos a resolver el problema. El valor por\n\t\t\tdefecto es 8.\n\t\t-i\tOpcion de impresión. Debe ir seguido de un 1 si se desea\n\t\t\tque cada hijo imprima su resultado, o 0 en caso contra-\n\t\t\trio. El valor por defecto es 0.\n\n"
 #endif
 
+/*INICIO Funciones y procedimientos referentes al manejo de respuestas*/
+
+void lectura(Trie *respuestas) {
+  FILE *respuesta;
+  char *nombre = (char *) malloc(17 * sizeof(char));
+  int i;
+  for (i = 0; i < Trie->maxChildren; i++) {
+    sprintf(nombre, "",);///////////////////////////////////////////////
+  }
+}
+
+/*FIN Funciones y procedimientos referentes al manejo de respuestas*/
+/*----------------------------------------------------------------------------*/
+
 void main(int argc, char **argv){
   int nJobs = 8;
   int flagPrint = 0;
-	int espera;
-//  printf("argc == %d\n\n", argc);
+  int espera;
+  //  printf("argc == %d\n\n", argc);
   
-  procesarArgumentos(argc, argv, &nJobs, &flagPrint);
+  procesarArgumentos(argc, argv, &nJobs, &flagPrint, USO);
   
-//  printf("nJobs: %d, flagPrint: %d\n\n", nJobs, flagPrint);
+  //  printf("nJobs: %d, flagPrint: %d\n\n", nJobs, flagPrint);
 
 	pid_t crea;
 	//	if((crea = fork()) == 0){
@@ -53,24 +66,26 @@ void main(int argc, char **argv){
 		//}
 	wait(&espera);
 
-	pid_t trabajadores[nJobs];
-	int h;
-	for (h = 0; h < nJobs; h++){
-		if ((trabajadores[h]=fork())==0){
-			char* argumento1 = malloc(sizeof(char*));
-			sprintf(argumento1, "%d",h%8);
-			char* argumento2 = malloc(sizeof(char*));
-			sprintf(argumento2, "%d",h/8);
-			char* argumento3 = malloc(sizeof(char*));
-			sprintf(argumento3, "%d",flagPrint);
-			execl("./reinas", "./reinas", argumento1, argumento2, argumento3, NULL);
-		}
-	}
+  pid_t trabajadores[nJobs];
+  int h;
+  for (h = 0; h < nJobs; h++){
+    if ((trabajadores[h]=fork())==0){
+      char* argumento1 = malloc(sizeof(char*));
+      sprintf(argumento1, "%d",h%8);
+      char* argumento2 = malloc(sizeof(char*));
+      sprintf(argumento2, "%d",h/8);
+      char* argumento3 = malloc(sizeof(char*));
+      sprintf(argumento3, "%d",flagPrint);
+      execl("./reinas", "./reinas", argumento1, argumento2, argumento3, NULL);
+    }
+  }
 	
-	for (h = 0; h < nJobs; h++){
-		wait(&espera);
-	}
-	
-	execl("/bin/rm", "rm -r", "-r", "./salidas", NULL);
+  for (h = 0; h < nJobs; h++){
+    wait(&espera);
+  }
+
+  
+  
+  execl("/bin/rm", "rm -r", "-r", "./salidas", NULL);
 	
 }
