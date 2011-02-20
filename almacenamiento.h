@@ -289,10 +289,12 @@ typedef struct nodeTrie NodeTrie;
 
 struct nodeTrie {
   int isWord;
+  int wordSize;
   int multiplicity;
   int numChildren;
   NodeTrie *parent;
   NodeTrie **children;
+  void *extraInfo;
 };
 
 typedef struct {
@@ -318,33 +320,65 @@ NodeTrie *newNodeTrie(int nChildren, NodeTrie *dad);
 Trie *newTrie(int nChildren);
 
 /**
- * Se encarga de liberar la memoria ocupada por un NodeTrie.
- * retorna: 0 si la liberación tuvo éxito, 1 en caso contrario.
+ * Se encarga de liberar recursivamente la memoria ocupada por un NodeTrie.
+ * nChildren: numero Máximo de hijos que tiene el NodeTrie a liberar.
+ * node: apuntador al NodeTrie a liberar.
+ * retorna: 0 si la liberación tuvo éxito; en caso contrario, retorna un error.
  */
-int nt_free(NodeTrie node);
+int nt_free(int nChildren, NodeTrie *node);
 
 /**
  * Se encarga de liberar la memoria ocupada por un Trie.
- * retorna: 0 si la liberación tuvo éxito, 1 en caso contrario.
+ * tree: Trie a liberar.
+ * retorna: 0 si la liberación tuvo éxito; en caso contrario, retorna un error.
  */
-int t_free(Trie tree);
+int t_free(Trie *tree);
 
 /**
  * Inserta el elemento 'elem' en el Trie 'tree'.
- * elem: Elemento a insertar.
  * tree: Apuntador al Trie donde se insertará el elemento 'elem'.
+ * elem: Elemento a insertar, Es un arreglo de enteros que representan las
+ *       "letras" de la "palabra" que se inserta.
+ * info: Informacion extra a almacenar relativa a 'elem'.
  * retorna: 0 si la inserción tuvo éxito, 1 en caso contrario.
  */
-int insert(Trie *tree, void *elem);
+int T_insert(Trie *tree, int *elem, void *info);
 
 /**
  * Extrae las "palabras" almacenadas en el Trie 'tree'.
- * tree: Trie del cual se extraerán las palabras.
+ * tree: Apuntador al Trie del cual se extraerán las palabras.
  * return: un arreglo que contiene cada palabra representada como un arreglo de
  *         enteros; donde cada entero representa el caracter asociado a esa po-
  *         sición en el Trie.
  */
-int **extractWords(Trie tree);
+int **extractWords(Trie *tree);
+
+/**
+ * Función auxuliar que extrae todas las "palabras" almacenadas en el Trie cuya
+ * raiz es el NodeTrie 'node', y que tiene un máximo de 'max' hijos.
+ * node: apuntador al NodeTrie raiz del Trie del cual se extraerán las 
+ *       "palabras".
+ * max: Numero máximo de NodeTrie's hijos que puede tener cualquier NodeTrie en
+ *      el Trie al que pertenece 'node'.
+ */
+int **extractAux(NodeTrie *node, int max);
+
+/**
+ * Se encarga de liberar la memoria utilizada por el arreglo de arreglos de 'int'
+ * pasado como parámetro.
+ * matrix: matriz a liberar.
+ */
+void matrix_free(int **matrix);
+
+/**
+ * Cuenta las "palabras" almacenadas en un Trie a partir de un NodeTrie hacia 
+ * abajo en el arbol.
+ * node: NodeTrie a partir del cual se contarán las "palabras".
+ * max: Numero máximo de NodeTrie's hijos que puede tener cualquier NodeTrie en
+ *      el Trie al que pertenece 'node'.
+ */
+int countWords(NodeTrie *node, int max);
+
 
 /*FIN Funciones y procedimientos referentes al tipo Trie*/
 
