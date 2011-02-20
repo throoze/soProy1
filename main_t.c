@@ -5,6 +5,7 @@
  */
 
 #include "main_t.h"
+#include "pReinas.h"
 
 #include "main_p.h"
 
@@ -42,6 +43,79 @@ void job(){
 
 }
 
+// ############# calculo reinas ####################
+
+void try(int i){
+  int j;
+  if(i == ri && i != 7) i++;
+  for (j = 0; j < 8; j++){
+
+    if ((a[j] && b[i+j] && c[i-j+7]) || (i == 7 && ri == i)){
+      if (ri != i){      
+	x[i]=j;
+	a[j]=FALSE;
+	b[i+j]=FALSE;
+	c[i-j+7]=FALSE;
+      }
+      if (i < 7) try(i+1);
+      else{
+	tiempo = clock() - tiempo;
+	int k;
+	if (imprime){
+	  printf("   Resultado del hijo %d:\n",ri+(rj*8));
+	  printf("      Solucion: ");
+	  for(k = 0 ; k < 8  ; k++) {
+	    if(k == 7) {
+	      printf("(%d,%d)\n",k,x[k]);
+	    }
+	    else {
+	      printf("(%d,%d) ",k,x[k]);
+	    }
+	  }
+	  printf("          Tiempo: %f\n",(double)tiempo);
+	  printf("          Tablero inicial: (%d,%d)\n\n", ri, rj);
+	}
+ 
+	  
+	break;
+      }	
+      a[j]=TRUE;
+      b[i+j]=TRUE;
+      c[i-j+7]=TRUE;	
+    }      
+  }
+}
+//#################### esto debe tener como parametro una estructura nada mas ###########
+void *reinas(void *argumentos){
+  // ri = argumentos[0];
+  //rj = argumentos[1];
+  //imprime = argumentos[2];
+  int i;
+  for(i = 0; i < 8; i++){ 
+    a[i] = TRUE;
+  }
+  for(i = 0; i < 15; i++){ 
+    b[i] = TRUE;
+  } 
+  for(i = 0; i < 15; i++){ 
+    c[i] = TRUE;
+  }
+  
+  x[ri] = rj;
+  a[rj] = FALSE;
+  b[ri + rj] = FALSE;
+  c[ri - rj + 7] = FALSE;
+
+  tiempo = clock();
+  try(0);
+   
+  return;
+}
+
+
+//################## main #######################
+
+
 void main(int argc, char **argv){
   int nJobs = 8;
   int flagPrint = 0;
@@ -50,4 +124,23 @@ void main(int argc, char **argv){
   procesarArgumentos(argc, argv, &nJobs, &flagPrint, USO);
   
   printf("nJobs: %d, flagPrint: %d\n\n", nJobs, flagPrint);
+
+
+pthread_t tid[nJobs];
+  int h;
+  int estado;
+  
+  for (h = 0; h < nJobs; h++){
+    int argumentos[]={h%8,h&8,flagPrint};
+    if (pthread_create(&tid[h],NULL,reinas, (void *)argumentos)){      
+      perror("ERROR AL CREAR EL HIJO");
+    }
+    else{
+      fprintf(stderr, "Se creo el hilo %u \n",tid[h]);
+    }    
+    for (h = 0; h < nJobs; h++) {
+      pthread_join(tid[h], NULL);
+      printf("Termino el hilo");
+    }	   
+  }		  
 }
