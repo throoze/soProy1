@@ -1,3 +1,166 @@
+/*
+ * Archivo: reinascommon.c
+ * Código en común para ambas versiones de reinas.
+ * Desarrollado por: Victor De Ponte
+ *                   Isaac Lopez
+ */
+#include "reinascommon.h"
+
+#ifndef STD
+#define STD
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#define FALSE 0
+#define TRUE 1
+#define TAMAX 10
+#endif
+
+#ifndef USEPROC
+#define USEPROC
+#include <unistd.h>
+#endif
+
+#ifndef USETIME
+#define USETIME
+#include <time.h>
+#endif
+
+#ifndef LIMITS
+#define LIMITS
+#include <limits.h>
+#endif
+
+
+/*INICIO Funciones y Procedimientos referentes al tipo Trie*/
+
+NodeTrie *newNodeTrie(int nChildren, NodeTrie *dad) {
+  NodeTrie *nuevo;
+  if (nuevo = (NodeTrie *) malloc(sizeof(NodeTrie))){
+    nuevo->isWord = nuevo->wordSize = nuevo->numChildren = FALSE;
+    nuevo->meta = NULL;
+    nuevo->parent = dad;
+    if (dad) {
+      dad->numChildren++;
+    }
+    nuevo->children = (NodeTrie **) malloc(nChildren * sizeof(NodeTrie *));
+    register int i;
+    for (i = 0; i < nChildren; i++) {
+      nuevo->children[i] = NULL;
+    }
+    return nuevo;
+  } else {
+    perror("Problema reservando memoria para un nuevo NodeTrie!");
+    exit(1);
+  }
+}
+
+Trie *newTrie(int nChildren) {
+  Trie *nuevo;
+  if (nuevo= (Trie *) malloc( sizeof(Trie))) {
+    nuevo->size = 0;
+    nuevo->maxChildren = nChildren;
+    nuevo->root = newNodeTrie(nChildren,NULL);
+    return nuevo;
+  } else {
+    perror("Problema reservando memoria para un nuevo Trie!");
+    exit(1);
+  }
+}
+
+int nt_free(int nChildren, NodeTrie *node) {
+  register int i;
+  for (i = 0; i < nChildren; i++) {
+    if (node->children[i]) {
+      nt_free(nChildren, node->children[i]);
+    }
+  }
+  node->parent = NULL;
+  free(node);
+  node = NULL;
+  return 0;
+}
+
+int t_free(Trie *tree){
+  if (tree) {
+    if (tree->root){
+      nt_free(tree->maxChildren ,tree->root);
+    }
+  }
+  tree->root = NULL; 
+  free(tree);
+  tree = NULL;
+  return 0;
+}
+
+int T_insert(Trie *tree, int *elem, clock_t t, int auth){
+  int tam = (sizeof(elem)/sizeof(int));
+  if (tree) {
+    NodeTrie *inUse = tree->root;
+    register int i;
+    for (i = 0; i < (tam - 1) ; i++) {
+      if (inUse->children[elem[i]] == NULL) {
+	inUse->children[elem[i]] = newNodeTrie(tree->maxChildren, inUse);
+      }
+      inUse = inUse->children[elem[i]];
+    }
+    i++;
+    if (inUse->children[elem[i]] == NULL) {
+      inUse->children[elem[i]] = newNodeTrie(tree->maxChildren, inUse);
+    }
+    inUse->isWord = TRUE;
+    inUse->wordSize = tam;
+
+    inUse->meta->haySolucion = TRUE;
+    inUse->meta->multiplicity++;    
+    if (t < inUse->meta->time) {
+      inUse->meta->time = t;
+    }
+
+    tree->size++;
+    return 0;
+  } else {
+    printf("Problema al insertar en un Trie: El Trie no está inicializado!");
+    exit(1);
+  }
+}
+
+void traversal(Trie *respuestas){
+  int max = respuestas->maxChildren;
+  int *sol = (int *) malloc(max * sizeof(int));
+  int posi = 0;
+  int nSol = 0;
+  int size = respuestas->size;
+  printf("Nro. Total de soluciones diferentes: %d",size);
+  NodeTrie *inUse = respuestas->root;
+  transAux(inUse,0,max,&sol,&posi,&nSol);
+}
+
+void transAux(NodeTrie *node, int indice, int max, int **sol, int *posi, int *nSol){
+  register int i;
+  for (i = 0; i < max; i++) {
+    if (node->children[i]) {
+      if (0 <= *posi && *posi < max) {
+	*sol[*posi] = i;
+	*posi++;
+      }
+      transAux(node->children[i],i,max,sol,posi,nSol);
+      *posi--;
+    }
+    if (node->isWord) {
+      *sol[7] = indice;
+      printf("   Solucion %d: (0,%d) (1,%d) (2,%d) (3,%d) (4,%d) (5,%d) (6,%d) (7,%d)\n",nSol,sol[0],sol[1],sol[2],sol[3],sol[4],sol[5],sol[6],sol[7]);
+      printf("      Tiempo minimo: %d mseg.\n", node->meta->time);
+      printf("Nro. de veces encontrada: %d", node->meta->multiplicity);
+      *nSol++;
+    }
+  }
+}
+/*FIN Funciones y Procedimientos referentes al tipo Trie*/
+
+/*----------------------------------------------------------------------------*/
+
+/*INICIO Funciones y procedimientos referentes al manejo de parámetros*/
 void procesarNJobs(char *argv, int *nJobs, char *usage){
   *nJobs = atoi(argv);
   if (*nJobs <= 0) {
@@ -104,3 +267,8 @@ void procesarArgumentos(int argc, char **argv, int *nJobs, int *flagPrint, char 
       }
   }
 }
+
+/*FIN Funciones y procedimientos referentes al manejo de parámetros*/
+
+/*----------------------------------------------------------------------------*/
+/*FIN DEL ARCHIVO (EOF)*/
