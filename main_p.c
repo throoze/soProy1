@@ -46,9 +46,11 @@ void main(int argc, char **argv){
 //  printf("nJobs: %d, flagPrint: %d\n\n", nJobs, flagPrint);
 
 	pid_t crea;
-	if((crea = fork()) == 0){
-		execl("/bin/mkdir", "mkdir", "./salidas", NULL);
-	}
+	//	if((crea = fork()) == 0){
+	printf("hola1\n");
+		execlp("/bin/mkdir", "mkdir", "./salidas", NULL);
+	printf("hola2\n");
+		//}
 	wait(&espera);
 
 	pid_t trabajadores[nJobs];

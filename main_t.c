@@ -5,6 +5,7 @@
  */
 
 #include "main_t.h"
+#include "pReinas.h"
 
 #include "main_p.h"
 
