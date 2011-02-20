@@ -1,10 +1,30 @@
+/*
+ * Archivo: pReinas.h
+ * Código del algoritmo que encuentra las soluciones.
+ * HEADER
+ * Desarrollado por: Victor De Ponte
+ *                   Isaac Lopez
+ */
+
+#ifndef STD
+#define STD
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <time.h>
+#include <stdlib.h>
 #define FALSE 0
 #define TRUE 1
+#endif
+
+
+#ifndef USEPROC
+#define USEPROC
+#include <unistd.h>
+#endif
+
+#ifndef USETIME
+#define USETIME
+#include <time.h>
+#endif
 
 
 int a[8]; // a[i]=TRUE indica que no hay una reina en la i-ésima columna
