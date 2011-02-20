@@ -106,6 +106,7 @@ void main(int argc, char **argv){
   
   Trie *respuestas;
   lectura(respuestas);
+  traversal(respuestas);
 
   execl("/bin/rm", "rm -r", "-r", "./salidas", NULL);
 	
