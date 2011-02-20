@@ -5,14 +5,17 @@
  */
 
 #include "almacenamiento.h"
+
 #ifndef STD
 #define STD
 #include <stdio.h>
 #include <string.h>
-#define TRUE 1
+#include <stdlib.h>
 #define FALSE 0
+#define TRUE 1
 #define TAMAX 10
 #endif
+
 
 /*INICIO Funciones y Procedimientos referentes al tipo hashLote*/
 Segmento  *newSegmento() {
@@ -359,167 +362,5 @@ int li_liberar(ListaInt *list){
 }
 
 /*FIN Funciones y Procedimientos referentes al tipo ListaInt*/
-
-/*INICIO Funciones y Procedimientos referentes al tipo Trie*/
-NodeTrie *newNodeTrie(int nChildren, NodeTrie *dad) {
-  NodeTrie *nuevo;
-  if (nuevo = (NodeTrie *) malloc(sizeof(NodeTrie))){
-    nuevo->isWord = nuevo->multiplicity = nuevo->numChildren = FALSE;
-    nuevo->parent = dad;
-    if (dad) {
-      dad->numChildren++;
-    }
-    nuevo->children = (NodeTrie **) malloc(nChildren * sizeof(NodeTrie *));
-    register int i;
-    for (i = 0; i < nChildren; i++) {
-      nuevo->children[i] = NULL;
-    }
-    return nuevo;
-  } else {
-    perror("Problema reservando memoria para un nuevo NodeTrie!");
-    exit(1);
-  }
-}
-
-Trie *newTrie(int nChildren){
-  Trie *nuevo;
-  if (nuevo= (Trie *) malloc( sizeof(Trie))) {
-    nuevo->size = 0;
-    nuevo->maxChildren = nChildren;
-    nuevo->root = newNodeTrie(nChildren,NULL);
-    return nuevo;
-  } else {
-    perror("Problema reservando memoria para un nuevo Trie!");
-    exit(1);
-  }
-}
-
-int nt_free(int nChildren, NodeTrie *node){
-  register int i;
-  for (i = 0; i < nChildren; i++) {
-    if (node->children[i]) {
-      nt_free(nChildren, node->children[i]);
-    }
-  }
-  node->parent = node->extraInfo = NULL;
-  free(node);
-  node = NULL;
-  return 0;
-}
-
-int t_free(Trie *tree){
-  if (tree) {
-    if (tree->root){
-      nt_free(tree->maxChildren ,tree->root);
-    }
-  }
-  tree->root = NULL; 
-  free(tree);
-  tree = NULL;
-  return 0;
-}
-
-int T_insert(Trie *tree, int *elem, void *info){
-  int tam = (sizeof(elem)/sizeof(int));
-  if (tree) {
-    NodeTrie *inUse = tree->root;
-    register int i;
-    for (i = 0; i < (tam - 1) ; i++) {
-      if (inUse->children[elem[i]] == NULL) {
-	inUse->children[elem[i]] = newNodeTrie(tree->maxChildren, inUse);
-      }
-      inUse = inUse->children[elem[i]];
-    }
-    i++;
-    if (inUse->children[elem[i]] == NULL) {
-      inUse->children[elem[i]] = newNodeTrie(tree->maxChildren, inUse);
-    }
-    inUse->extraInfo = info;
-    inUse->isWord = TRUE;
-    inUse->wordSize = tam;
-    inUse->multiplicity++;
-    tree->size++;
-    return 0;
-  } else {
-    printf("Problema al insertar en un Trie: El Trie no está inicializado!");
-    exit(1);
-  }
-}
-
-int **extractWords(Trie *tree){
-  int treeSize = tree->size;
-  int **words = extractAux(tree->root,tree->maxChildren);
-  return words;
-}
-
-int **extractAux(NodeTrie *node, int max) {
-  int **words = (int **) malloc(countWords(node,max) * sizeof(int *));
-  int i = 0;
-  if (node) {
-    if(node->isWord) {
-      int *aux = (int *) malloc(sizeof(int));
-      aux[0] = -1;
-      words[i] = aux;
-      aux = NULL;
-      i = 1;
-    }
-    int k;
-    for (k = 0; k < max; k++) {
-      if (node->children[k]) {
-	int **tmp = extractAux(node->children[k],max);
-	
-	if (tmp) {
-	  int tmpTam = (sizeof(tmp)/sizeof(int *));
-	
-	  register int c;
-	  for (c = 0; c < tmpTam; c++) {
-	    int tamW = sizeof(tmp[c])/sizeof(int);
-	    int empty = (tamW == 1 && tmp[0] == -1 ? TRUE : FALSE);
-	    int tamNW = tamW + (empty ? 0 : 1);
-	    words[i] = (int *) malloc(tamNW * sizeof(int));
-	    words[i][0] = k;
-	    if (!empty) {
-	      register int j;
-	      for (j = 1; j < tamNW; j++){
-		words[i][j] = tmp[c][j-1];
-	      }
-	    }
-	    i++;
-	  }
-	}
-	matrix_free(tmp);
-      }
-    }
-  }
-  return words;
-}
-
-void matrix_free(int **matrix) {
-  register int i,j;
-  int m = sizeof(matrix)/sizeof(int *);
-  for (i = 0; i < m; i++) {
-    free(matrix[i]);
-    matrix[i] = NULL;
-  }
-  free(matrix);
-  matrix = NULL;
-}
-
-int countWords(NodeTrie *node, int max) {
-  int n = 0;
-  if (node) {
-    register int k;
-    for (k = 0; k < max; k++) {
-      if (node->children[k]) {
-	n = n + countWords(node->children[k],max);
-      }
-    }
-    return (n + (node->isWord ? 1 : 0));
-  } else {
-    return 0;
-  }
-}
-
-/*FIN Funciones y Procedimientos referentes al tipo Trie*/
 
 /*FIN DEL ARCHIVO (EOF)*/
