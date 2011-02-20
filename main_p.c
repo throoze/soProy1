@@ -30,18 +30,38 @@
 #include <unistd.h>
 #endif
 
+#ifndef USETIME
+#define USETIME
+#include <time.h>
+#endif
+
 #ifndef USO
 #define USO "\nreinas_p: Resuelve el problema de las 8 reinas usando Procesos hijos.\n\nDesarrollado por:\n\tVictor De Ponte, Carnet 05-38087\n\tIsaac Lopez, Carnet 07-41120\n\nUSO:\n\n\tSintaxis:\n\n\t\treinas_p [-n <num_trabajadores>] [-i {1|0}]\n\n\tOpciones:\n\n\t\t-n\tNumero de hijos a resolver el problema. El valor por\n\t\t\tdefecto es 8.\n\t\t-i\tOpcion de impresión. Debe ir seguido de un 1 si se desea\n\t\t\tque cada hijo imprima su resultado, o 0 en caso contra-\n\t\t\trio. El valor por defecto es 0.\n\n"
 #endif
 
 /*INICIO Funciones y procedimientos referentes al manejo de respuestas*/
 
-void lectura(Trie *respuestas) {
-  FILE *respuesta;
-  char *nombre = (char *) malloc(17 * sizeof(char));
+void lectura(Trie *answers) {
+  int max = answers->maxChildren;
+  char mensaje[60];
+  FILE *answer;
+  char *fileName = (char *) malloc(19 * sizeof(char));
+  int tmp[max];
+  clock_t time = 0.0;
   int i;
-  for (i = 0; i < Trie->maxChildren; i++) {
-    sprintf(nombre, "",);///////////////////////////////////////////////
+  for (i = 0; i < max; i++) {
+    sprintf(fileName,"./salidas/salida0%d",i);
+    if (answer = fopen(fileName,"r")) {
+      sprintf(mensaje, "Problema abriendo la salida del proceso %d!\n", i);
+      perror(mensaje);
+      exit(1);
+    }
+    if (fscanf(answer, "%d %d %d %d %d %d %d %d %Lf", tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5], tmp[6], tmp[7], time)) {
+      sprintf(mensaje, "Problema leyendo la salida del proceso %d!\n", i);
+      perror(mensaje);
+      exit(1);
+    }
+    T_insert(answers,tmp,time);
   }
 }
 
@@ -81,9 +101,10 @@ void main(int argc, char **argv){
   for (h = 0; h < nJobs; h++){
     wait(&espera);
   }
+  
+  Trie *respuestas;
+  lectura(respuestas);
 
-  
-  
   execl("/bin/rm", "rm -r", "-r", "./salidas", NULL);
 	
 }
