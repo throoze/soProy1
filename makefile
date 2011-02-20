@@ -10,7 +10,7 @@ OBJS2 = main_t.o ${LIBS}
 LIBS = reinascommon.o almacenamiento.o
 
 TFLAGS = -lpthread
-CFLAGS = -w
+CFLAGS = 
 
 all: ${EXE1} ${EXE2} ${EXE3}
 
