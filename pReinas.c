@@ -17,21 +17,20 @@ void try(int i){
 	tiempo = clock() - tiempo;
 	int k;
 	if (imprime){
-	  fflush(stdout);
-	  printf("   Resultado del proceso %d:\n",ri+(rj*8));
-	  printf("      Solucion: ");
+	  char *resultado = malloc(200);
+	  sprintf(resultado, "   Resultado del hijo %d:\n      Solucion: ",ri+(rjreal*8) + 1);
 	  for(k = 0 ; k < 8  ; k++) {
 	    if(k == 7) {
-	      printf("(%d,%d)\n",k,x[k]);
+	      sprintf(resultado, "%s(%d,%d)\n",resultado,k,x[k]);
 	    }
 	    else {
-	      printf("(%d,%d) ",k,x[k]);
+	      sprintf(resultado, "%s(%d,%d) ",resultado,k,x[k]);
 	    }
 	  }
-	  fflush(stdout);
-	  printf("          Tiempo: %.2Lf mseg.\n",(double)tiempo);
-	  printf("          Tablero inicial: (%d,%d)\n\n", ri, rj);
-	  fflush(stdout);
+	  sprintf(resultado, "%s          Tiempo: %f\n",resultado, (double)tiempo);
+	  sprintf(resultado, "%s          Tablero inicial: (%d,%d)\n\n",resultado,  ri, rj);
+	  printf(resultado);
+	  
 	}
 	
 	FILE *archivo;
@@ -59,7 +58,8 @@ void try(int i){
 
 int main( int argc, const char* argv[] ){
   ri = atoi(argv[1]);
-  rj = atoi(argv[2]);
+  rj = atoi(argv[2])%8;
+	rjreal = atoi(argv[1]);
   imprime = atoi(argv[3]);
   
   int i;

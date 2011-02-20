@@ -41,6 +41,7 @@ int x[8]; // indica la posición de la reina en la columna i-ésima
 
 int ri;
 int rj;
+int rjreal;
 int imprime;
 clock_t tiempo;
 

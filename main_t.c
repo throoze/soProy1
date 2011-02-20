@@ -56,22 +56,25 @@ void try(int i){
 	tiempo = clock() - tiempo;
 	int k;
 	if (imprime){
-	  printf("   Resultado del hijo %d:\n",ri+(rj*8));
-	  printf("      Solucion: ");
+	  char *resultado = malloc(200);
+	  sprintf(resultado, "   Resultado del hijo %d:\n      Solucion: ",ri+(rjreal*8) + 1);
 	  for(k = 0 ; k < 8  ; k++) {
 	    if(k == 7) {
-	      printf("(%d,%d)\n",k,x[k]);
+	      sprintf(resultado, "%s(%d,%d)\n",resultado,k,x[k]);
 	    }
 	    else {
-	      printf("(%d,%d) ",k,x[k]);
+	      sprintf(resultado, "%s(%d,%d) ",resultado,k,x[k]);
 	    }
 	  }
-	  printf("          Tiempo: %f\n",(double)tiempo);
-	  printf("          Tablero inicial: (%d,%d)\n\n", ri, rj);
-	}
- 
+	  sprintf(resultado, "%s          Tiempo: %f\n",resultado, (double)tiempo);
+	  sprintf(resultado, "%s          Tablero inicial: (%d,%d)\n\n",resultado,  ri, rj);
+	  printf(resultado);
 	  
-	break;
+	}
+	//	  printf("salgo\n");
+	  pthread_exit(NULL);	 	
+	
+
       }	
       a[j]=TRUE;
       b[i+j]=TRUE;
@@ -79,11 +82,15 @@ void try(int i){
     }      
   }
 }
-//#################### esto debe tener como parametro una estructura nada mas ###########
 void *reinas(void *argumentos){
-  // ri = argumentos[0];
-  //rj = argumentos[1];
-  //imprime = argumentos[2];
+  int *arg = (int*)argumentos;
+  ri = arg[0];
+  rj = arg[1]%8;
+	rjreal = arg[1];
+  imprime = arg[2];
+  //  printf("entrada = (%d,%d,%d)\n",ri,rj,imprime);
+  int fin = 1;
+
   int i;
   for(i = 0; i < 8; i++){ 
     a[i] = TRUE;
@@ -113,28 +120,37 @@ void *reinas(void *argumentos){
 void main(int argc, char **argv){
   int nJobs = 8;
   int flagPrint = 0;
-  printf("argc == %d\n\n", argc);
+  //  printf("argc == %d\n\n", argc);
   
   procesarArgumentos(argc, argv, &nJobs, &flagPrint, USO);
   
-  printf("nJobs: %d, flagPrint: %d\n\n", nJobs, flagPrint);
+  //printf("nJobs: %d, flagPrint: %d\n\n", nJobs, flagPrint);
 
 
-pthread_t tid[nJobs];
+  pthread_t tid[nJobs];
   int h;
   int estado;
-  
+  int argumentos[nJobs][3];   
+
   for (h = 0; h < nJobs; h++){
-    int argumentos[]={h%8,h&8,flagPrint};
-    if (pthread_create(&tid[h],NULL,reinas, (void *)argumentos)){      
-      perror("ERROR AL CREAR EL HIJO");
+    argumentos[h][0] = h%8;
+    argumentos[h][1] = h/8; 
+    argumentos[h][2] = flagPrint;
+    if (pthread_create(&tid[h],NULL,reinas, (void *)argumentos[h])){
+           perror("ERROR AL CREAR EL HIJO");
     }
     else{
-      fprintf(stderr, "Se creo el hilo %u \n",tid[h]);
-    }    
-    for (h = 0; h < nJobs; h++) {
-      pthread_join(tid[h], NULL);
-      printf("Termino el hilo");
-    }	   
-  }		  
+      //      printf("hijo creados\n");
+    }
+  }
+  for (h = 0; h < nJobs; h++) {
+    //  printf("hola1\n");
+    fflush(stdout);
+    //   pthread_join(tid[h], NULL);
+    //   printf("hola2\n");
+    fflush(stdout); 
+ }
+  //  printf("hola3\n");
+    fflush(stdout);
+    pthread_exit(NULL);	 	
 }

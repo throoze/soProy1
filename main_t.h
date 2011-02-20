@@ -25,6 +25,7 @@
 #endif
 
 #include "pReinas.h"
+int rjreal;
 
 
 #ifndef USO

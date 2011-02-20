@@ -79,11 +79,9 @@ void main(int argc, char **argv){
   //  printf("nJobs: %d, flagPrint: %d\n\n", nJobs, flagPrint);
 
 	pid_t crea;
-	//	if((crea = fork()) == 0){
-	printf("hola1\n");
+		if((crea = fork()) == 0){
 		execlp("/bin/mkdir", "mkdir", "./salidas", NULL);
-	printf("hola2\n");
-		//}
+		}
 	wait(&espera);
 
   pid_t trabajadores[nJobs];
@@ -97,6 +95,7 @@ void main(int argc, char **argv){
       char* argumento3 = malloc(sizeof(char*));
       sprintf(argumento3, "%d",flagPrint);
       execl("./reinas", "./reinas", argumento1, argumento2, argumento3, NULL);
+      printf("ESTO NO DEBERIA IMPRIMIRSE NUNCA#####################\n");
     }
   }
 	
