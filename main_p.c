@@ -51,35 +51,29 @@ void lectura(Trie *answers, int nJobs) {
   double time = 0.0;
   int i;
   for (i = 1; i <= nJobs; i++) {
-    printf("Vuelta número: %d\n",i);
     sprintf(fileName,"./salidas/salida%d",i);
-    //printf("Durmiendo...\n");
-    //sleep(7);
     answer = fopen(fileName,"r");
     if (errno) {
       sprintf(mensaje, "Problema abriendo la salida del proceso %d!!!:\n\tArchivo: %s\n", i, fileName);
       perror(mensaje);
       exit(1);
     }
-    printf("Wepa2!\n");
     
     if (fscanf(answer, "%d %d %d %d %d %d %d %d %d", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &tmp[4], &tmp[5], &tmp[6], &tmp[7], &time) == EOF) {
       sprintf(mensaje, "Problema leyendo la salida del proceso %d!\n", i);
       perror(mensaje);
       exit(1);
     }
-    int j;
-    for( j = 0; j < 8; j++) {
-      printf("tmp[%d] == %d\n",j,tmp[j]);
-    }
-    printf("time == %d\n",time);
-    printf("tmp.length = %d, max == %d\n", sizeof(tmp)/sizeof(int), max);
-    printf("Wepa3!\n");
+    
     T_insert(answers,tmp,max,time);
-    printf("valor de i == %d, nJobs == %d\n",i,nJobs);
-    printf("hola %d!\n",i);
+    printf("Inserte la respuesta número: %d\n",i);
+    register int j;
+    for (j = 0; j < max; j++) {
+      printf("ans[%d] == %d\n",j, tmp[j]);
+    }
+    fflush(stdout);
   }
-  printf("Me voy de aki!!!");
+  //  sleep(10);
 }
 
 /*FIN Funciones y procedimientos referentes al manejo de respuestas*/
@@ -123,6 +117,6 @@ void main(int argc, char **argv){
   lectura(respuestas, nJobs);
   traversal(respuestas);
 
-    execl("/bin/rm", "rm -r", "-r", "./salidas", NULL);
+  execl("/bin/rm", "/bin/rm", "-r", "./salidas/", (char *) NULL);
 	
 }
