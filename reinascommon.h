@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 #define FALSE 0
 #define TRUE 1
 #define TAMAX 10
@@ -39,7 +40,7 @@ typedef struct meta MetaData;
 struct meta {
   int haySolucion;
   int multiplicity;
-  clock_t time;
+  double time;
 };
 
 typedef struct nodeTrie NodeTrie;
@@ -99,7 +100,7 @@ int t_free(Trie *tree);
  * auth: autor de la respuesta dada.
  * retorna: 0 si la inserción tuvo éxito, 1 en caso contrario.
  */
-int T_insert(Trie *tree, int *elem, clock_t t);
+int T_insert(Trie *tree, int elem[], int tam, double t);
 
 /**
  * Se encarga de comenzar la recursion que recorrera el Trie y escribirá el 

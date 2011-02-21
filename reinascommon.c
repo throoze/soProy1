@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 #define FALSE 0
 #define TRUE 1
 #define TAMAX 10
@@ -93,24 +94,27 @@ int t_free(Trie *tree){
   return 0;
 }
 
-int T_insert(Trie *tree, int *elem, clock_t t){
-  int tam = (sizeof(elem)/sizeof(int));
+int T_insert(Trie *tree, int elem[], int tam, double t){
   if (tree) {
     NodeTrie *inUse = tree->root;
     register int i;
     for (i = 0; i < (tam - 1) ; i++) {
-      if (inUse->children[elem[i]] == NULL) {
+       if (inUse->children[elem[i]] == NULL) {
 	inUse->children[elem[i]] = newNodeTrie(tree->maxChildren, inUse);
       }
       inUse = inUse->children[elem[i]];
     }
-    i++;
     if (inUse->children[elem[i]] == NULL) {
       inUse->children[elem[i]] = newNodeTrie(tree->maxChildren, inUse);
     }
+    inUse = inUse->children[elem[i]];
     inUse->isWord = TRUE;
     inUse->wordSize = tam;
-
+    if (inUse->meta == NULL) {
+      inUse->meta = (MetaData *) malloc(sizeof(MetaData));
+      inUse->meta->multiplicity = 0;
+      inUse->meta->time = INT_MAX;
+    }
     inUse->meta->haySolucion = TRUE;
     inUse->meta->multiplicity++;    
     if (t < inUse->meta->time) {
