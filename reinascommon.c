@@ -155,7 +155,7 @@ void transAux(NodeTrie *node, int indice, int max, int sol[], int *posi, int *nS
     char *cadena = (char *) malloc(300);
     sprintf(cadena,"   Solucion %d: (0,%d) (1,%d) (2,%d) (3,%d) (4,%d) (5,%d) (6,%d) (7,%d)\n",(*nSol + 1),sol[0],sol[1],sol[2],sol[3],sol[4],sol[5],sol[6],sol[7]);
     sprintf(cadena,"%s      Tiempo minimo: %d mseg.\n",cadena, node->meta->time);
-    sprintf(cadena,"%s      Nro. de veces encontrada: %d\n",cadena, node->meta->multiplicity);
+    sprintf(cadena,"%s      Nro. de veces encontrada: %d\n\n",cadena, node->meta->multiplicity);
     printf(cadena);
     fflush(stdout);
     *nSol = *nSol + 1;
