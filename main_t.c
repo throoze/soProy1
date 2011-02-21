@@ -37,7 +37,7 @@
 
 // ############# calculo reinas ####################
 
-void try(int i, Trie *tree){
+void try(int i, Trie *tree, int ri,int rj, int rjreal,int imprime, int tiempo, struct timeval start){
   int j;
   if(i == ri && i != 7) i++;
   for (j = 0; j < 8; j++){
@@ -49,8 +49,9 @@ void try(int i, Trie *tree){
 	b[i+j]=FALSE;
 	c[i-j+7]=FALSE;
       }
-      if (i < 7) try(i+1,tree);
+      if (i < 7) try(i+1,tree, ri,rj,rjreal,imprime, tiempo, start);
       else{
+	struct timeval end;
 	gettimeofday(&end, NULL);
 	int tiempo = ((end.tv_sec * 1000000 + end.tv_usec)
 		      - (start.tv_sec * 1000000 + start.tv_usec));
@@ -87,11 +88,15 @@ void try(int i, Trie *tree){
 }
 void *reinas(void *argumentos){
   Args *arg = (Args *) argumentos;
-  ri = arg->x;
-  rj = arg->y % 8;
-  rjreal = arg->y;
-  imprime = arg->imprime;
-  //  printf("entrada = (%d,%d,%d)\n",ri,rj,imprime);
+  int ri = arg->x;
+  int rj = arg->y % 8;
+  int rjreal = arg->y;
+  int imprime = arg->imprime;
+  int tiempo;
+
+  struct timeval start;
+
+  
   int fin = 1;
 
   int i;
@@ -111,7 +116,7 @@ void *reinas(void *argumentos){
   c[ri - rj + 7] = FALSE;
 
   gettimeofday(&start, NULL);
-  try(0, arg->tree);
+  try(0, arg->tree, ri,rj,rjreal,imprime, tiempo, start);
    
   return;
 }
@@ -123,17 +128,15 @@ void *reinas(void *argumentos){
 void main(int argc, char **argv){
   int nJobs = 8;
   int flagPrint = 0;
-  //  printf("argc == %d\n\n", argc);
   
   procesarArgumentos(argc, argv, &nJobs, &flagPrint, USO);
   
-  //printf("nJobs: %d, flagPrint: %d\n\n", nJobs, flagPrint);
-
 
   pthread_t tid[nJobs];
   int h;
   void *estado;
   Trie *answers = newTrie(8);
+  struct timeval start;
   Args *(argumentos[nJobs]);
   for (h = 0; h < nJobs; h++) {
     argumentos[h] = (Args *) malloc(sizeof(Args));
@@ -144,13 +147,10 @@ void main(int argc, char **argv){
   for (h = 0; h < nJobs; h++){
     argumentos[h]->x = h%8;
     argumentos[h]->y = h/8; 
-    /* printf("Todo fino: %d\n",h); */
-    /* fflush(stdout); */
     if (pthread_create(&tid[h],NULL,reinas, (void *)argumentos[h])){
            perror("ERROR AL CREAR EL HIJO");
     }
     else{
-      //      printf("hijo creados\n");
     }
   }
   for (h = 0; h < nJobs; h++) {
@@ -159,7 +159,6 @@ void main(int argc, char **argv){
       exit(1);
     }
   }
-  //  printf("hola3\n");
     fflush(stdout);
     traversal(answers);
 
