@@ -79,11 +79,11 @@ void main(int argc, char **argv){
   
   procesarArgumentos(argc, argv, &nJobs, &flagPrint, USO);
   
-	pid_t crea;
-		if((crea = fork()) == 0){
-		execlp("/bin/mkdir", "mkdir", "./salidas", NULL);
-		}
-	wait(&espera);
+  /* pid_t crea; */
+  /* 	if((crea = fork()) == 0){ */
+  /* 	execlp("/bin/mkdir", "mkdir", "./salidas", NULL); */
+  /* 	} */
+  /* wait(&espera); */
 
   pid_t trabajadores[nJobs];
   int h;
@@ -106,6 +106,6 @@ void main(int argc, char **argv){
   Trie *respuestas = newTrie(8);
   lectura(respuestas, nJobs);
   traversal(respuestas);
-  execl("/bin/rm", "/bin/rm", "-r", "./salidas/", (char *) NULL);
+  /* execl("/bin/rm", "/bin/rm", "-r", "./salidas/", (char *) NULL); */
 	
 }
