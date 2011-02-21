@@ -5,8 +5,6 @@
  */
 
 #include "main_t.h"
-#include "pReinas.h"
-
 
 #ifndef STD
 #define STD
@@ -39,7 +37,7 @@
 
 // ############# calculo reinas ####################
 
-void try(int i){
+void try(int i, Trie *tree){
   int j;
   if(i == ri && i != 7) i++;
   for (j = 0; j < 8; j++){
@@ -51,7 +49,7 @@ void try(int i){
 	b[i+j]=FALSE;
 	c[i-j+7]=FALSE;
       }
-      if (i < 7) try(i+1);
+      if (i < 7) try(i+1,tree);
       else{
 	gettimeofday(&end, NULL);
 	int tiempo = ((end.tv_sec * 1000000 + end.tv_usec)
@@ -73,6 +71,7 @@ void try(int i){
 	  printf(resultado);
 	  
 	}
+	T_insert(tree,x,8,tiempo);
 	//	  printf("salgo\n");
 	  pthread_exit(NULL);	 	
 	
@@ -85,11 +84,11 @@ void try(int i){
   }
 }
 void *reinas(void *argumentos){
-  int *arg = (int*)argumentos;
-  ri = arg[0];
-  rj = arg[1]%8;
-	rjreal = arg[1];
-  imprime = arg[2];
+  Args *arg = (Args *) argumentos;
+  ri = arg->x;
+  rj = arg->y % 8;
+  rjreal = arg->y;
+  imprime = arg->imprime;
   //  printf("entrada = (%d,%d,%d)\n",ri,rj,imprime);
   int fin = 1;
 
@@ -110,7 +109,7 @@ void *reinas(void *argumentos){
   c[ri - rj + 7] = FALSE;
 
   gettimeofday(&start, NULL);
-  try(0);
+  try(0, arg->tree);
    
   return;
 }
@@ -132,13 +131,17 @@ void main(int argc, char **argv){
   pthread_t tid[nJobs];
   int h;
   int estado;
-  int argumentos[nJobs][3];   
+  Trie *answers = newTrie(8);
+  Args *argumentos = (Args *) malloc(sizeof(Args));
+  argumentos->tree = answers;
 
   for (h = 0; h < nJobs; h++){
-    argumentos[h][0] = h%8;
-    argumentos[h][1] = h/8; 
-    argumentos[h][2] = flagPrint;
-    if (pthread_create(&tid[h],NULL,reinas, (void *)argumentos[h])){
+    argumentos->x = h%8;
+    argumentos->y = h/8; 
+    argumentos->imprime = flagPrint;
+    printf("Todo fino: %d\n",h);
+    fflush(stdout);
+    if (pthread_create(&tid[h],NULL,reinas, (void *)argumentos)){
            perror("ERROR AL CREAR EL HIJO");
     }
     else{
@@ -154,5 +157,6 @@ void main(int argc, char **argv){
  }
   //  printf("hola3\n");
     fflush(stdout);
+    traversal(answers);
     pthread_exit(NULL);	 	
 }
