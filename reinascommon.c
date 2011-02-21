@@ -135,7 +135,7 @@ int T_insert(Trie *tree, int elem[], int tam, double t){
 void traversal(Trie *respuestas){
   int max = respuestas->maxChildren;
   int sol[max];
-  int posi = 0;
+  int posi = -1;
   int nSol = 0;
   int size = respuestas->size;
   register int i;
@@ -149,10 +149,11 @@ void traversal(Trie *respuestas){
 }
 
 void transAux(NodeTrie *node, int indice, int max, int sol[], int *posi, int *nSol){
+  *posi = *posi + 1;
   if (node->isWord) {
     sol[7] = indice;
     char *cadena = (char *) malloc(300);
-    sprintf(cadena,"   Solucion %d: (0,%d) (1,%d) (2,%d) (3,%d) (4,%d) (5,%d) (6,%d) (7,%d)\n",*nSol,sol[0],sol[1],sol[2],sol[3],sol[4],sol[5],sol[6],sol[7]);
+    sprintf(cadena,"   Solucion %d: (0,%d) (1,%d) (2,%d) (3,%d) (4,%d) (5,%d) (6,%d) (7,%d)\n",(*nSol + 1),sol[0],sol[1],sol[2],sol[3],sol[4],sol[5],sol[6],sol[7]);
     sprintf(cadena,"%s      Tiempo minimo: %d mseg.\n",cadena, node->meta->time);
     sprintf(cadena,"%s      Nro. de veces encontrada: %d\n",cadena, node->meta->multiplicity);
     printf(cadena);
@@ -163,13 +164,12 @@ void transAux(NodeTrie *node, int indice, int max, int sol[], int *posi, int *nS
     for (i = 0; i < max; i++) {
       if (node->children[i] != NULL) {
 	if (0 <= *posi && *posi < max) {
-	  sol[*posi] = i;
-	  *posi = *posi + 1;
+	  sol[*posi] = i;	  
 	}
 	transAux(node->children[i],i,max,sol,posi,nSol);
+	*posi = *posi - 1;
       }
     }
-    *posi = *posi - 1;
   }
 }
 /*FIN Funciones y Procedimientos referentes al tipo Trie*/
