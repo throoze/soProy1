@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #define TRUE 1
 #define FALSE 0
 #define TAMAX 10
@@ -41,27 +42,40 @@
 
 /*INICIO Funciones y procedimientos referentes al manejo de respuestas*/
 
-void lectura(Trie *answers) {
+void lectura(Trie *answers, int nJobs) {
   int max = answers->maxChildren;
   char mensaje[60];
   FILE *answer;
   char *fileName = (char *) malloc(19 * sizeof(char));
   int tmp[max];
-  clock_t time = 0.0;
+  double time = 0.0;
   int i;
-  for (i = 0; i < max; i++) {
-    sprintf(fileName,"./salidas/salida0%d",i);
-    if (answer = fopen(fileName,"r")) {
-      sprintf(mensaje, "Problema abriendo la salida del proceso %d!\n", i);
+  for (i = 0; i < nJobs; i++) {
+    printf("Vuelta número: %d\n",i);
+    sprintf(fileName,"./salidas/salida%d",i);
+    //printf("Durmiendo...\n");
+    //sleep(7);
+    answer = fopen(fileName,"r");
+    if (errno) {
+      sprintf(mensaje, "Problema abriendo la salida del proceso %d!!!:\n\tArchivo: %s\n", i, fileName);
       perror(mensaje);
       exit(1);
     }
-    if (fscanf(answer, "%d %d %d %d %d %d %d %d %Lf", tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5], tmp[6], tmp[7], time)) {
+    printf("Wepa2!\n");
+    
+    if (fscanf(answer, "%d %d %d %d %d %d %d %d %d", &tmp[0], &tmp[1], &tmp[2], &tmp[3], &tmp[4], &tmp[5], &tmp[6], &tmp[7], &time) == EOF) {
       sprintf(mensaje, "Problema leyendo la salida del proceso %d!\n", i);
       perror(mensaje);
       exit(1);
     }
-    T_insert(answers,tmp,time);
+    for( i = 0; i < 8; i++) {
+      printf("tmp[%d] == %d\n",i,tmp[i]);
+    }
+    printf("time == %d\n",time);
+    printf("tmp.length = %d, max == %d\n", sizeof(tmp)/sizeof(int), max);
+    printf("Wepa3!\n");
+    T_insert(answers,tmp,max,time);
+    printf("Wepa4!\n");
   }
 }
 
@@ -103,8 +117,8 @@ void main(int argc, char **argv){
     wait(&espera);
   }
   
-  Trie *respuestas;
-  lectura(respuestas);
+  Trie *respuestas = newTrie(8);
+  lectura(respuestas, nJobs);
   traversal(respuestas);
 
   execl("/bin/rm", "rm -r", "-r", "./salidas", NULL);
