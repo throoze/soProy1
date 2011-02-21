@@ -124,7 +124,6 @@ int T_insert(Trie *tree, int elem[], int tam, double t){
     if (t < inUse->meta->time) {
       inUse->meta->time = t;
     }
-
     return 0;
   } else {
     printf("Problema al insertar en un Trie: El Trie no está inicializado!");
@@ -159,6 +158,8 @@ void transAux(NodeTrie *node, int indice, int max, int sol[], int *posi, int *nS
     printf(cadena);
     fflush(stdout);
     *nSol = *nSol + 1;
+    free(cadena);
+    cadena = NULL;
   } else {
     register int i;
     for (i = 0; i < max; i++) {

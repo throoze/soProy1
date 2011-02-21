@@ -69,7 +69,8 @@ void try(int i, Trie *tree){
 	  sprintf(resultado, "%s          Tiempo (milisegundos): %d\n",resultado, tiempo);
 	  sprintf(resultado, "%s          Tablero inicial: (%d,%d)\n\n",resultado,  ri, rj);
 	  printf(resultado);
-	  
+	  free(resultado);
+	  resultado = NULL;
 	}
 	
 	T_insert(tree,x,8,tiempo);
@@ -161,5 +162,11 @@ void main(int argc, char **argv){
   //  printf("hola3\n");
     fflush(stdout);
     traversal(answers);
+
+
+    for (h = 0; h < nJobs; h++) {
+      free(argumentos[h]);
+      argumentos[h] = NULL;
+    }
     pthread_exit(NULL);	 	
 }

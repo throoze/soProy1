@@ -67,6 +67,8 @@ void lectura(Trie *answers, int nJobs) {
     
     T_insert(answers,tmp,max,time);
   }
+  free(fileName);
+  fileName = NULL;
 }
 
 /*FIN Funciones y procedimientos referentes al manejo de respuestas*/
@@ -106,6 +108,8 @@ void main(int argc, char **argv){
   Trie *respuestas = newTrie(8);
   lectura(respuestas, nJobs);
   traversal(respuestas);
+  t_free(respuestas);
+  respuestas = NULL;
   /* execl("/bin/rm", "/bin/rm", "-r", "./salidas/", (char *) NULL); */
 	
 }
