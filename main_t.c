@@ -71,6 +71,7 @@ void try(int i, Trie *tree){
 	  printf(resultado);
 	  
 	}
+	
 	T_insert(tree,x,8,tiempo);
 	//	  printf("salgo\n");
 	  pthread_exit(NULL);	 	
@@ -132,16 +133,19 @@ void main(int argc, char **argv){
   int h;
   int estado;
   Trie *answers = newTrie(8);
-  Args *argumentos = (Args *) malloc(sizeof(Args));
-  argumentos->tree = answers;
+  Args *(argumentos[nJobs]);
+  for (h = 0; h < nJobs; h++) {
+    argumentos[h] = (Args *) malloc(sizeof(Args));
+    argumentos[h]->imprime = flagPrint;
+    argumentos[h]->tree = answers;
+  }
 
   for (h = 0; h < nJobs; h++){
-    argumentos->x = h%8;
-    argumentos->y = h/8; 
-    argumentos->imprime = flagPrint;
-    printf("Todo fino: %d\n",h);
-    fflush(stdout);
-    if (pthread_create(&tid[h],NULL,reinas, (void *)argumentos)){
+    argumentos[h]->x = h%8;
+    argumentos[h]->y = h/8; 
+    /* printf("Todo fino: %d\n",h); */
+    /* fflush(stdout); */
+    if (pthread_create(&tid[h],NULL,reinas, (void *)argumentos[h])){
            perror("ERROR AL CREAR EL HIJO");
     }
     else{
