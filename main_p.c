@@ -117,6 +117,7 @@ void main(int argc, char **argv){
   lectura(respuestas, nJobs);
   traversal(respuestas);
 
+  sleep(5);
   execl("/bin/rm", "/bin/rm", "-r", "./salidas/", (char *) NULL);
 	
 }

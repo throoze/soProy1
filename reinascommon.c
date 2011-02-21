@@ -169,7 +169,7 @@ void transAux(NodeTrie *node, int indice, int max, int sol[], int *posi, int *nS
 	transAux(node->children[i],i,max,sol,posi,nSol);
       }
     }
-    *posi--;
+    *posi = *posi - 1;
   }
 }
 /*FIN Funciones y Procedimientos referentes al tipo Trie*/
