@@ -20,7 +20,7 @@ void try(int i){
 	int k;
 	if (imprime){
 	  char *resultado = malloc(200);
-	  sprintf(resultado, "   Resultado del hijo %d:\n      Solucion: ",ri+(rjreal*8) + 1);
+	  sprintf(resultado, "   Resultado del hijo %d:\n      Solucion: ",ri+(8*rjreal) + 1);
 	  for(k = 0 ; k < 8  ; k++) {
 	    if(k == 7) {
 	      sprintf(resultado, "%s(%d,%d)\n",resultado,k,x[k]);
@@ -38,7 +38,7 @@ void try(int i){
 	FILE *archivo;
 	char *nombre = malloc(sizeof(char*));
 	char *resultado = malloc(20);
-	sprintf(nombre,"./salidas/salida%d%d",rj,ri);
+	sprintf(nombre,"./salidas/salida%d",ri+(rjreal*8) + 1);
 	archivo = fopen(nombre, "w");
 	sprintf(resultado,"%d %d %d %d %d %d %d %d %d",x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],tiempo);
 	if(archivo == NULL) {
@@ -61,8 +61,9 @@ void try(int i){
 int main( int argc, const char* argv[] ){
   ri = atoi(argv[1]);
   rj = atoi(argv[2])%8;
-	rjreal = atoi(argv[1]);
+  rjreal = atoi(argv[2]);
   imprime = atoi(argv[3]);
+
   
   int i;
   for(i = 0; i < 8; i++){ 

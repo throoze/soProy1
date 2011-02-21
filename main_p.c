@@ -95,7 +95,6 @@ void main(int argc, char **argv){
       char* argumento3 = malloc(sizeof(char*));
       sprintf(argumento3, "%d",flagPrint);
       execl("./reinas", "./reinas", argumento1, argumento2, argumento3, NULL);
-      printf("ESTO NO DEBERIA IMPRIMIRSE NUNCA#####################\n");
     }
   }
 	
@@ -103,10 +102,12 @@ void main(int argc, char **argv){
     wait(&espera);
   }
   
+  printf("hasta aqui todo bienn\n");
+  fflush(stdout);
   Trie *respuestas;
   lectura(respuestas);
   traversal(respuestas);
 
-  execl("/bin/rm", "rm -r", "-r", "./salidas", NULL);
+    execl("/bin/rm", "rm -r", "-r", "./salidas", NULL);
 	
 }
