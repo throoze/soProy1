@@ -50,7 +50,7 @@ void lectura(Trie *answers, int nJobs) {
   int tmp[max];
   double time = 0.0;
   int i;
-  for (i = 0; i < nJobs; i++) {
+  for (i = 1; i <= nJobs; i++) {
     printf("Vuelta número: %d\n",i);
     sprintf(fileName,"./salidas/salida%d",i);
     //printf("Durmiendo...\n");
@@ -68,15 +68,18 @@ void lectura(Trie *answers, int nJobs) {
       perror(mensaje);
       exit(1);
     }
-    for( i = 0; i < 8; i++) {
-      printf("tmp[%d] == %d\n",i,tmp[i]);
+    int j;
+    for( j = 0; j < 8; j++) {
+      printf("tmp[%d] == %d\n",j,tmp[j]);
     }
     printf("time == %d\n",time);
     printf("tmp.length = %d, max == %d\n", sizeof(tmp)/sizeof(int), max);
     printf("Wepa3!\n");
     T_insert(answers,tmp,max,time);
-    printf("Wepa4!\n");
+    printf("valor de i == %d, nJobs == %d\n",i,nJobs);
+    printf("hola %d!\n",i);
   }
+  printf("Me voy de aki!!!");
 }
 
 /*FIN Funciones y procedimientos referentes al manejo de respuestas*/
