@@ -32,7 +32,7 @@ void try(int i){
 	  sprintf(resultado, "%s          Tiempo (milisegundos): %d \n",resultado, tiempo);
 	  sprintf(resultado, "%s          Tablero inicial: (%d,%d)\n\n",resultado,  ri, rj);
 	  printf(resultado);
-	  
+	  fflush(stdout);
 	}
 	
 	FILE *archivo;
@@ -60,8 +60,8 @@ void try(int i){
 
 int main( int argc, const char* argv[] ){
   ri = atoi(argv[1]);
-  rj = atoi(argv[2])%8;
-	rjreal = atoi(argv[1]);
+  rj = atoi(argv[2]);
+  rjreal = atoi(argv[1]);
   imprime = atoi(argv[3]);
   
   int i;
