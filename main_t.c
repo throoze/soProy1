@@ -131,7 +131,7 @@ void main(int argc, char **argv){
 
   pthread_t tid[nJobs];
   int h;
-  int estado;
+  void *estado;
   Trie *answers = newTrie(8);
   Args *(argumentos[nJobs]);
   for (h = 0; h < nJobs; h++) {
@@ -153,12 +153,11 @@ void main(int argc, char **argv){
     }
   }
   for (h = 0; h < nJobs; h++) {
-    //  printf("hola1\n");
-    fflush(stdout);
-    //   pthread_join(tid[h], NULL);
-    //   printf("hola2\n");
-    fflush(stdout); 
- }
+    if (pthread_join(tid[h], &estado)) {
+      perror("Error al esperar uno de los hilos:\n");
+      exit(1);
+    }
+  }
   //  printf("hola3\n");
     fflush(stdout);
     traversal(answers);
