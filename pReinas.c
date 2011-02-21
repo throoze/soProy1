@@ -29,7 +29,7 @@ void try(int i){
 	      sprintf(resultado, "%s(%d,%d) ",resultado,k,x[k]);
 	    }
 	  }
-	  sprintf(resultado, "%s          Tiempo (milisegundos): %d \n",resultado, tiempo);
+	  sprintf(resultado, "%s          Tiempo: %d mseg.\n",resultado, tiempo);
 	  sprintf(resultado, "%s          Tablero inicial: (%d,%d)\n\n",resultado,  ri, rj);
 	  printf(resultado);
 	  fflush(stdout);
