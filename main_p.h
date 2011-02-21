@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #define TRUE 1
 #define FALSE 0
 #define TAMAX 10
@@ -44,7 +45,7 @@ struct timeval start, end;
  * conseguidas.
  * respuestas: Apuntador al Trie que almacenará las respuestas.
  */
-void lectura(Trie *respuestas);
+void lectura(Trie *respuestas, int nJobs);
 
 /*FIN Funciones y procedimientos referentes al manejo de respuestas*/
 /*----------------------------------------------------------------------------*/
