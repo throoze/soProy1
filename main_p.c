@@ -66,14 +66,7 @@ void lectura(Trie *answers, int nJobs) {
     }
     
     T_insert(answers,tmp,max,time);
-    printf("Inserte la respuesta número: %d\n",i);
-    register int j;
-    for (j = 0; j < max; j++) {
-      printf("ans[%d] == %d\n",j, tmp[j]);
-    }
-    fflush(stdout);
   }
-  //  sleep(10);
 }
 
 /*FIN Funciones y procedimientos referentes al manejo de respuestas*/
@@ -83,12 +76,9 @@ void main(int argc, char **argv){
   int nJobs = 8;
   int flagPrint = 0;
   int espera;
-  //  printf("argc == %d\n\n", argc);
   
   procesarArgumentos(argc, argv, &nJobs, &flagPrint, USO);
   
-  //  printf("nJobs: %d, flagPrint: %d\n\n", nJobs, flagPrint);
-
 	pid_t crea;
 		if((crea = fork()) == 0){
 		execlp("/bin/mkdir", "mkdir", "./salidas", NULL);
@@ -116,8 +106,6 @@ void main(int argc, char **argv){
   Trie *respuestas = newTrie(8);
   lectura(respuestas, nJobs);
   traversal(respuestas);
-
-  sleep(5);
   execl("/bin/rm", "/bin/rm", "-r", "./salidas/", (char *) NULL);
 	
 }
