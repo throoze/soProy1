@@ -108,20 +108,23 @@ int T_insert(Trie *tree, int elem[], int tam, double t){
       inUse->children[elem[i]] = newNodeTrie(tree->maxChildren, inUse);
     }
     inUse = inUse->children[elem[i]];
-    inUse->isWord = TRUE;
+    if (inUse->isWord == FALSE){
+      tree->size++;
+      inUse->isWord = TRUE;
+    }
     inUse->wordSize = tam;
     if (inUse->meta == NULL) {
       inUse->meta = (MetaData *) malloc(sizeof(MetaData));
       inUse->meta->multiplicity = 0;
       inUse->meta->time = INT_MAX;
     }
+    
     inUse->meta->haySolucion = TRUE;
     inUse->meta->multiplicity++;    
     if (t < inUse->meta->time) {
       inUse->meta->time = t;
     }
 
-    tree->size++;
     return 0;
   } else {
     printf("Problema al insertar en un Trie: El Trie no está inicializado!");
@@ -131,33 +134,42 @@ int T_insert(Trie *tree, int elem[], int tam, double t){
 
 void traversal(Trie *respuestas){
   int max = respuestas->maxChildren;
-  int *sol = (int *) malloc(max * sizeof(int));
+  int sol[max];
   int posi = 0;
   int nSol = 0;
   int size = respuestas->size;
-  printf("Nro. Total de soluciones diferentes: %d",size);
+  register int i;
+  for (i = 0; i < max; i++){
+    sol[i] = -1;
+  }
+  printf("Nro. Total de soluciones diferentes: %d\n",size);
+  fflush(stdout);
   NodeTrie *inUse = respuestas->root;
-  transAux(inUse,0,max,&sol,&posi,&nSol);
+  transAux(inUse,0,max,sol,&posi,&nSol);
 }
 
-void transAux(NodeTrie *node, int indice, int max, int **sol, int *posi, int *nSol){
-  register int i;
-  for (i = 0; i < max; i++) {
-    if (node->children[i]) {
-      if (0 <= *posi && *posi < max) {
-	*sol[*posi] = i;
-	*posi++;
+void transAux(NodeTrie *node, int indice, int max, int sol[], int *posi, int *nSol){
+  if (node->isWord) {
+    sol[7] = indice;
+    char *cadena = (char *) malloc(300);
+    sprintf(cadena,"   Solucion %d: (0,%d) (1,%d) (2,%d) (3,%d) (4,%d) (5,%d) (6,%d) (7,%d)\n",*nSol,sol[0],sol[1],sol[2],sol[3],sol[4],sol[5],sol[6],sol[7]);
+    sprintf(cadena,"%s      Tiempo minimo: %d mseg.\n",cadena, node->meta->time);
+    sprintf(cadena,"%s      Nro. de veces encontrada: %d\n",cadena, node->meta->multiplicity);
+    printf(cadena);
+    fflush(stdout);
+    *nSol = *nSol + 1;
+  } else {
+    register int i;
+    for (i = 0; i < max; i++) {
+      if (node->children[i] != NULL) {
+	if (0 <= *posi && *posi < max) {
+	  sol[*posi] = i;
+	  *posi = *posi + 1;
+	}
+	transAux(node->children[i],i,max,sol,posi,nSol);
       }
-      transAux(node->children[i],i,max,sol,posi,nSol);
-      *posi--;
     }
-    if (node->isWord) {
-      *sol[7] = indice;
-      printf("   Solucion %d: (0,%d) (1,%d) (2,%d) (3,%d) (4,%d) (5,%d) (6,%d) (7,%d)\n",nSol,sol[0],sol[1],sol[2],sol[3],sol[4],sol[5],sol[6],sol[7]);
-      printf("      Tiempo minimo: %d mseg.\n", node->meta->time);
-      printf("Nro. de veces encontrada: %d", node->meta->multiplicity);
-      *nSol++;
-    }
+    *posi--;
   }
 }
 /*FIN Funciones y Procedimientos referentes al tipo Trie*/

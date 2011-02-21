@@ -116,10 +116,10 @@ void traversal(Trie *respuestas);
  * indice: Identificador del NodeTrie que fue llamado en la recursión anterior.
  * max: Maximo de NodeTrie's hijos que puede tener un NodeTrie en este Arbol.
  * sol: Arreglo que guardará la solucion que se esta leyendo.
- * posi: Indice de la posicion se esta usando el arreglo 'sol'.
+ * posi: Indice de la posicion que se esta usando el arreglo 'sol'.
  * nSol: Número de solución que se esta leyendo.
  */
-void transAux(NodeTrie *node, int indice, int max, int **sol, int *posi, int *nSol);
+void transAux(NodeTrie *node, int indice, int max, int sol[], int *posi, int *nSol);
 
 /*FIN Funciones y procedimientos referentes al tipo Trie*/
 
