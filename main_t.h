@@ -52,19 +52,8 @@ int c[15]; // c[i]=TRUE indica que no hay una reina en la i-ésima
 
 int x[8]; // indica la posición de la reina en la columna i-ésima
 
-int ri;
-int rj;
-int rjreal;
+
 int imprime;
-int tiempo;
-struct timeval start, end;
-
-
-
-int rjreal;
-
-struct timeval start;
-struct timeval end;
 
 typedef struct args {
   int x;
